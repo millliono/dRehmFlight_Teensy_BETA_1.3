@@ -218,16 +218,16 @@ float Kd_yaw = 0.00015;       //Yaw D-gain (be careful when increasing too high,
 //NOTE: Pin 13 is reserved for onboard LED, pins 18 and 19 are reserved for the MPU6050 IMU for default setup
 //Radio:
 //Note: If using SBUS, connect to pin 21 (RX5), if using DSM, connect to pin 15 (RX3)
-const int ch1Pin = 21; //throttle
+const int ch1Pin = 20; //throttle
 const int ch2Pin = 22; //roll
-const int ch3Pin = 20; //pitch
-const int ch4Pin = 15; //yaw
+const int ch3Pin = 21; //pitch
+const int ch4Pin = 17; //yaw
 const int ch5Pin = 16; //(throttle cut)
-const int ch6Pin = 17; //aux1 (free aux channel)
+const int ch6Pin = 15; //aux1 (free aux channel)
 const int PPM_Pin = 23;
 
 //OneShot125 ESC pin outputs:
-const int m1Pin = 2;
+const int m1Pin = 9;
 const int m2Pin = 3;
 
 //PWM servo or ESC outputs:
@@ -1211,33 +1211,30 @@ void failSafe() {
 }
 
 void commandMotors() {
-  //DESCRIPTION: Send pulses to motor pins, oneshot125 protocol
-  /*
-   * My crude implimentation of OneShot125 protocol which sends 125 - 250us pulses to the ESCs (mXPin). The pulselengths being
-   * sent are mX_command_PWM, computed in scaleCommands(). This may be replaced by something more efficient in the future.
-   */
-  int wentLow = 0;
-  int pulseStart, timer;
+  // Reset flags
   int flagM1 = 0;
   int flagM2 = 0;
   
-  //Write all motor pins high
+  // Write all motor pins high
   digitalWrite(m1Pin, HIGH);
   digitalWrite(m2Pin, HIGH);
-  pulseStart = micros();
+  
+  // Get start time
+  int pulseStart = micros();
 
-  //Write each motor pin low as correct pulse length is reached
-  while (wentLow < 2 ) { //Keep going until final (6th) pulse is finished, then done
-    timer = micros();
-    if ((m1_command_PWM <= timer - pulseStart) && (flagM1==0)) {
+  // Write each motor pin low as correct pulse length is reached
+  while (!(flagM1 && flagM2)) { // Keep going until both flags are set
+    int timer = micros();
+    
+    // Check if pulse length for motor 1 is reached and hasn't been pulsed yet
+    if ((m1_command_PWM <= timer - pulseStart) && (flagM1 == 0)) {
       digitalWrite(m1Pin, LOW);
-      wentLow = wentLow + 1;
-      flagM1 = 1;
+      flagM1 = 1; // Set flag to indicate motor 1 has been pulsed
     }
-    if ((m2_command_PWM <= timer - pulseStart) && (flagM2==0)) {
+    // Check if pulse length for motor 2 is reached and hasn't been pulsed yet
+    if ((m2_command_PWM <= timer - pulseStart) && (flagM2 == 0)) {
       digitalWrite(m2Pin, LOW);
-      wentLow = wentLow + 1;
-      flagM2 = 1;
+      flagM2 = 1; // Set flag to indicate motor 2 has been pulsed
     }
   }
 }
