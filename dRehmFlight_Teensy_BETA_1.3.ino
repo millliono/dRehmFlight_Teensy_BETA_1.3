@@ -1,31 +1,3 @@
-//Arduino/Teensy Flight Controller - dRehmFlight
-//Author: Nicholas Rehm
-//Project Start: 1/6/2020
-//Last Updated: 7/29/2022
-//Version: Beta 1.3
- 
-//========================================================================================================================//
-
-//CREDITS + SPECIAL THANKS
-/*
-Some elements inspired by:
-http://www.brokking.net/ymfc-32_main.html
-
-Madgwick filter function adapted from:
-https://github.com/arduino-libraries/MadgwickAHRS
-
-MPU9250 implementation based on MPU9250 library by:
-brian.taylor@bolderflight.com
-http://www.bolderflight.com
-
-Thank you to:
-RcGroups 'jihlein' - IMU implementation overhaul + SBUS implementation.
-Everyone that sends me pictures and videos of your flying creations! -Nick
-
-*/
-
-
-
 //========================================================================================================================//
 //                                                 USER-SPECIFIED DEFINES                                                 //                                                                 
 //========================================================================================================================//
@@ -53,11 +25,7 @@ static const uint8_t num_DSM_channels = 6; //If using DSM RX, change this to mat
 //#define ACCEL_8G
 //#define ACCEL_16G
 
-
-
 //========================================================================================================================//
-
-
 
 //REQUIRED LIBRARIES (included with download in main sketch folder)
 
@@ -83,11 +51,7 @@ static const uint8_t num_DSM_channels = 6; //If using DSM RX, change this to mat
   #error No MPU defined... 
 #endif
 
-
-
 //========================================================================================================================//
-
-
 
 //Setup gyro and accel full scale value selection and scale factor
 
@@ -138,8 +102,6 @@ static const uint8_t num_DSM_channels = 6; //If using DSM RX, change this to mat
   #define ACCEL_SCALE ACCEL_FS_SEL_16
   #define ACCEL_SCALE_FACTOR 2048.0
 #endif
-
-
 
 //========================================================================================================================//
 //                                               USER-SPECIFIED VARIABLES                                                 //                           
@@ -209,8 +171,6 @@ float Kp_yaw = 0.3;           //Yaw P-gain
 float Ki_yaw = 0.05;          //Yaw I-gain
 float Kd_yaw = 0.00015;       //Yaw D-gain (be careful when increasing too high, motors will begin to overheat!)
 
-
-
 //========================================================================================================================//
 //                                                     DECLARE PINS                                                       //                           
 //========================================================================================================================//                                          
@@ -238,8 +198,6 @@ PWMServo servo1;  //Create servo objects to control a servo or ESC with PWM
 PWMServo servo2;
 
 //========================================================================================================================//
-
-
 
 //DECLARE GLOBAL VARIABLES
 
@@ -357,8 +315,6 @@ void setup() {
 
 }
 
-
-
 //========================================================================================================================//
 //                                                       MAIN LOOP                                                        //                           
 //========================================================================================================================//
@@ -419,13 +375,9 @@ void loop() {
   loopRate(2000); //Do not exceed 2000Hz, all filter parameters tuned to 2000Hz by default
 }
 
-
-
 //========================================================================================================================//
 //                                                      FUNCTIONS                                                         //                           
 //========================================================================================================================//
-
-
 
 void controlMixer() {
   //DESCRIPTION: Mixes scaled commands from PID controller to actuator outputs based on vehicle configuration
