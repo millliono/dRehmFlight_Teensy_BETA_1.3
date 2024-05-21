@@ -401,8 +401,8 @@ void controlMixer() {
   m2_command_scaled = thro_des - roll_PID; //Right
 
   //0.5 is centered servo, 0.0 is zero throttle if connecting to ESC for conventional PWM, 1.0 is max throttle
-  s1_command_scaled = 0.5 - 0.25 + pitch_PID - yaw_PID; //Left;
-  s2_command_scaled = 0.5 + 0.25 - pitch_PID - yaw_PID; //Right;
+  s1_command_scaled = 0.5 + 0.224;// - yaw_PID + pitch_PID ; //Left;
+  s2_command_scaled = 0.5 - 0.229;// - yaw_PID - pitch_PID ; //Right;
 }
 
 void armedStatus() {
