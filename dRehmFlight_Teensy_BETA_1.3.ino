@@ -130,12 +130,12 @@ float MagScaleY = 1.0;
 float MagScaleZ = 1.0;
 
 //IMU calibration parameters - calibrate IMU using calculate_IMU_error() in the void setup() to get these values, then comment out calculate_IMU_error()
-float AccErrorX = 0.01;
-float AccErrorY = -0.04;
+float AccErrorX = 0.00;
+float AccErrorY = -0.03;
 float AccErrorZ = -0.16;
-float GyroErrorX = -7.85;
-float GyroErrorY= -0.22;
-float GyroErrorZ = -0.63;
+float GyroErrorX = -7.84;
+float GyroErrorY= -0.31;
+float GyroErrorZ = -0.21;
 
 //Rotation matrix for IMU - BODY frame alignment
 float theta = 50 * M_PI / 180;
@@ -147,17 +147,17 @@ float rotationMatrix[3][3] = {
 
 //Controller parameters (take note of defaults before modifying!): 
 float i_limit = 25.0;     //Integrator saturation level, mostly for safety (default 25.0)
-float maxRoll = 30.0;     //Max roll angle in degrees for angle mode (maximum ~70 degrees), deg/sec for rate mode 
-float maxPitch = 30.0;    //Max pitch angle in degrees for angle mode (maximum ~70 degrees), deg/sec for rate mode
-float maxYaw = 160.0;     //Max yaw rate in deg/sec
+float maxRoll = 6.0;     //Max roll angle in degrees for angle mode (maximum ~70 degrees), deg/sec for rate mode 
+float maxPitch = 12.0;    //Max pitch angle in degrees for angle mode (maximum ~70 degrees), deg/sec for rate mode
+float maxYaw = 80.0;     //Max yaw rate in deg/sec
 
-float Kp_roll_angle = 0.2;    //Roll P-gain - angle mode 
+float Kp_roll_angle = 0.8;    //Roll P-gain - angle mode 
 float Ki_roll_angle = 0.3;    //Roll I-gain - angle mode
-float Kd_roll_angle = 0.05;   //Roll D-gain - angle mode (has no effect on controlANGLE2)
+float Kd_roll_angle = 0.1;   //Roll D-gain - angle mode (has no effect on controlANGLE2)
 float B_loop_roll = 0.9;      //Roll damping term for controlANGLE2(), lower is more damping (must be between 0 to 1)
-float Kp_pitch_angle = 0.2;   //Pitch P-gain - angle mode
-float Ki_pitch_angle = 0.3;   //Pitch I-gain - angle mode
-float Kd_pitch_angle = 0.05;  //Pitch D-gain - angle mode (has no effect on controlANGLE2)
+float Kp_pitch_angle = 0.5;   //Pitch P-gain - angle mode
+float Ki_pitch_angle = 0.01;   //Pitch I-gain - angle mode
+float Kd_pitch_angle = 0.15;  //Pitch D-gain - angle mode (has no effect on controlANGLE2)
 float B_loop_pitch = 0.9;     //Pitch damping term for controlANGLE2(), lower is more damping (must be between 0 to 1)
 
 float Kp_roll_rate = 0.15;    //Roll P-gain - rate mode
@@ -167,8 +167,8 @@ float Kp_pitch_rate = 0.15;   //Pitch P-gain - rate mode
 float Ki_pitch_rate = 0.2;    //Pitch I-gain - rate mode
 float Kd_pitch_rate = 0.0002; //Pitch D-gain - rate mode (be careful when increasing too high, motors will begin to overheat!)
 
-float Kp_yaw = 0.3;           //Yaw P-gain
-float Ki_yaw = 0.05;          //Yaw I-gain
+float Kp_yaw = 0.08;           //Yaw P-gain
+float Ki_yaw = 0.01;          //Yaw I-gain
 float Kd_yaw = 0.00015;       //Yaw D-gain (be careful when increasing too high, motors will begin to overheat!)
 
 //========================================================================================================================//
@@ -401,8 +401,8 @@ void controlMixer() {
   m2_command_scaled = thro_des - roll_PID; //Right
 
   //0.5 is centered servo, 0.0 is zero throttle if connecting to ESC for conventional PWM, 1.0 is max throttle
-  s1_command_scaled = 0.5 + 0.224;// - yaw_PID + pitch_PID ; //Left;
-  s2_command_scaled = 0.5 - 0.229;// - yaw_PID - pitch_PID ; //Right;
+  s1_command_scaled = 0.5 + 0.23  + pitch_PID - yaw_PID; //Left;
+  s2_command_scaled = 0.5 - 0.235 - pitch_PID - yaw_PID; //Right;
 }
 
 void armedStatus() {
